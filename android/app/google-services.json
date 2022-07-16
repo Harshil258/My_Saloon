@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "97905983794",
+    "project_id": "mysaloon-64118",
+    "storage_bucket": "mysaloon-64118.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97905983794:android:c072b9e59fa7b0d1b9572b",
+        "android_client_info": {
+          "package_name": "com.mysaloon.mysaloon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97905983794-731sg1b1najvcgj16vve6uk0qhpu26th.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3gOT7KZNxAzna5AjphE9ATvMmHI2IgQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97905983794-731sg1b1najvcgj16vve6uk0qhpu26th.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
