@@ -1,16 +1,24 @@
-import 'package:appwrite/appwrite.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_saloon/models/databaseModel.dart';
 import 'package:my_saloon/services/itemService.dart';
 
-import '../constants.dart';
+import '../models/salonmodel.dart';
 import '../models/servicemodel.dart';
+import '../models/userData.dart';
 
 class DetailPageController extends GetxController {
   ItemService itemService = ItemService();
-  List<databaseModel> databasemodellist = [];
-  List<databaseModel> cartlist = [];
-  List<servicemodel> mainCartList = [];
+  List<SalonModel> salonlist = [];
+  List<DatabaseModel> cartlist = [];
+  List<ServiceModel>  servicemodellist = [];
+  List<ServiceModel>  cartServicesForBookingpage = [];
+  bool isusermodelinitilize = false;
+  Usermodel? modelforintent = null;
+  var cartservicetotal = 0.obs;
 
   @override
   void onInit() {
@@ -19,56 +27,87 @@ class DetailPageController extends GetxController {
     loadDB();
   }
 
+  loadservicesFromfirebase(String salonid) async{
+    servicemodellist = await itemService.loadservicesFromfirebase(salonid);
+    getCartList(salonid);
+  }
+
+
+  Future<List<SalonModel>> callfirebase() async {
+    final CollectionReference collection =
+    FirebaseFirestore.instance.collection('salons');
+    QuerySnapshot querySnapshot = await collection.get();
+
+    salonlist = List.from(
+        querySnapshot.docs.map((element) => fromQuerySnapshot(element)));
+    return salonlist;
+  }
+
+  Future<bool> getuserdata() async{
+    modelforintent = await itemService.getuserdata();
+    if(modelforintent!.uid != null){
+      isusermodelinitilize = true;
+      return true;
+    }else{
+      return false;
+    }
+    update();
+    print("sadgsdgdg   ${modelforintent!.surname}");
+  }
+
+  Future<List<ServiceModel>> loadgetfilteredServices(String gender) async{
+    return await itemService.loadgetfilteredServices(gender);
+  }
+
+  loadCartServices() async {
+    cartServicesForBookingpage = [];
+    cartservicetotal = 0.obs;
+    for(var ele in servicemodellist){
+      if(cartlist.indexWhere((element) => element.serviceId == ele.serviceId) > -1){
+        cartServicesForBookingpage.add(ele);
+        cartservicetotal = cartservicetotal + ele.price;
+      }
+    }
+  }
+
   loadDB() async {
     await itemService.openDB();
   }
 
-
-
   getCartList(String salonid) async {
-    // try {
-      List list = await itemService.getCartList();
-      print("sdgsdgsdgsdgsdg ${list}");
-      databasemodellist.clear();
-      list.forEach((element) {
-        databasemodellist.add(databaseModel.fromJson(element));
-      });
-      if (databasemodellist
-              .indexWhere((element) => element.documentid == salonid) >
-          -1) {
-        cartlist = await itemService.getPerticularList(salonid);
+    try {
+      print("ggggggggggggggg ");
+      List list = await itemService.getPerticularList(salonid);
+      cartlist.clear();
+      for(var element in list){
+        cartlist.add(DatabaseModel.fromJson(element));
       }
-
-      Client client = Client(endPoint: AppConstsnts.endPoint);
-      client.setProject(AppConstsnts.project);
-      client.setSelfSigned(status: true);
-
-      cartlist.forEach((element) {
-        final databases = Database(client);
-        Future result = databases.getDocument(
-          collectionId: salonid,
-          documentId: element.serviceId,
-        );
-        result.then((value) {
-          print("afhfdhsfghfsgh  $value");
-        }).catchError((onError) {
-          print("afhfdhsfghfsgh  $onError");
-        });
-      });
-
-    // } catch (e) {
-    //   // print("fghdfghdfgh  $e");
-    // }
+      update();
+    } catch (e) {
+      print("fghdfghdfgh  $e");
+    }
   }
 
-  addToCart(String salonid, String serviceid, bool addedToCart,
-      bool bookedOrNot, String timeSlot){
-    itemService.saveRecord(salonid, serviceid, addedToCart, bookedOrNot, timeSlot);
+  addToCart(String salonid, String serviceid, bool addedToCart){
+    itemService.saveRecord(salonid, serviceid, addedToCart);
+    update();
   }
 
-/*
-   database columns
-   documentid(salon id)
-   services id
-  */
+  removeRecord(String service_id){
+    itemService.removeRecord(service_id);
+    update();
+  }
+
+  bool addedInCartOrNot(String service_id){
+    return cartlist.indexWhere((element) => element.serviceId == service_id) > -1;
+  }
+
+  Future<String?> loadUser(String userid, String name, String surname,
+      String email, String phoneno,String address,String photo) async {
+    return await itemService.loadUser(userid,name,surname,email,phoneno,address,photo);
+  }
+
+  Future<String?> uploadImage(PickedFile file,String name) async{
+    return await itemService.uploadImage(file,name);
+  }
 }

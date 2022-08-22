@@ -1,11 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:my_saloon/services/auth.dart';
+import 'package:my_saloon/services/detailPageController.dart';
+import 'package:my_saloon/signup_process.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/util/routes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'MyHomePage.dart';
 import 'Register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +24,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool changebutton = false;
   final _formKey = GlobalKey<FormState>();
+  var detailPagecontroller = Get.find<DetailPageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -154,23 +161,44 @@ class _LoginPageState extends State<LoginPage> {
                                         : MyThemes.purple)),
                             child: InkWell(
                               onTap: () async {
-                                // if (_formKey.currentState!.validate()) {
-                                //   setState(() {
-                                //     changebutton = true;
-                                //   });
-                                //   await Future.delayed(Duration(seconds: 1));
-                                //   await Navigator.pushNamed(
-                                //       context, Routes.homedetail);
-                                //   setState(() {
-                                //     changebutton = false;
-                                //   });
-                                // }
+                                User? user =
+                                    await Authentication.signInWithGoogle(
+                                        context: context);
+                                if (user != null) {
+                                  setState(() {
+                                    changebutton = true;
+                                  });
+                                  // await Future.delayed(Duration(seconds: 1));
+
+                                  await detailPagecontroller
+                                      .getuserdata()
+                                      .then((value) {
+                                    if (detailPagecontroller.modelforintent !=
+                                        null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyHomePage()));
+                                    } else {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Signup_process()));
+                                    }
+                                  });
+
+                                  setState(() {
+                                    changebutton = false;
+                                  });
+                                }
                               },
                               child: AnimatedContainer(
                                 duration:
                                     Duration(seconds: 1, milliseconds: 100),
                                 width: changebutton ? 150 : 350,
-                                height: 60,
+                                height: changebutton ? 50 : 60,
                                 alignment: Alignment.center,
                                 child: changebutton
                                     ? Icon(
@@ -182,12 +210,13 @@ class _LoginPageState extends State<LoginPage> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 8, 0),
-                                            child: Image.asset(
-                                                "assets/google icon.png",
-                                                height: 35),
-                                          ),
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 8, 0),
+                                              child: Image.asset(
+                                                  "assets/googleicon.png",
+                                                  height: 35,
+                                                  fit: BoxFit.cover)),
                                           Text("Sign in with Google",
                                               style: TextStyle(
                                                   color: Colors.white,

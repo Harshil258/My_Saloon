@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_saloon/models/servicemodel.dart';
 import 'package:readmore/readmore.dart';
 
 import '../themes.dart';
@@ -91,7 +93,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
 }
 
 class Horizontal_listview_item extends StatefulWidget {
-  const Horizontal_listview_item({Key? key}) : super(key: key);
+  const Horizontal_listview_item(this.imageurl, this.title, {Key? key})
+      : super(key: key);
+
+  final String imageurl;
+  final String title;
 
   @override
   State<Horizontal_listview_item> createState() =>
@@ -109,20 +115,13 @@ class _Horizontal_listview_itemState extends State<Horizontal_listview_item> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Container(
-            //   height: 150,
-            //   width: 110,
-            //   decoration:
-            //       BoxDecoration(borderRadius: BorderRadius.circular(20)),
-            //   child: Image.network(
-            //     "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg",
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
             ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                "https://images.pexels.com/photos/4625616/pexels-photo-4625616.jpeg?cs=srgb&dl=pexels-antoni-shkraba-4625616.jpg&fm=jpg",
+              child: CachedNetworkImage(
+                imageUrl: "${widget.imageurl}",
+                placeholder: (context, url) =>
+                    CircularProgressIndicator(color: MyThemes.purple),
+                errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
                 height: 145,
                 width: 110,
@@ -131,7 +130,7 @@ class _Horizontal_listview_itemState extends State<Horizontal_listview_item> {
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Text(
-                "Men Hair Cutting",
+                widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 13, overflow: TextOverflow.ellipsis),
               ),
@@ -231,13 +230,17 @@ class custom_item_view extends StatefulWidget {
       required this.Name,
       required this.Price,
       this.Description,
-      this.imagelink})
+      this.imagelink,
+      required this.addedOrNot,
+      this.onTapOnAddCart})
       : super(key: key);
 
   final String Name;
   final int Price;
   final String? Description;
   final String? imagelink;
+  final bool addedOrNot;
+  final GestureTapCallback? onTapOnAddCart;
 
   @override
   State<custom_item_view> createState() => _custom_item_viewState();
@@ -294,18 +297,173 @@ class _custom_item_viewState extends State<custom_item_view> {
               ),
             ),
           ),
-          widget.imagelink!.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.network(
-                    "${widget.imagelink}",
-                    fit: BoxFit.cover,
-                    height: 110,
-                    width: 110,
+          Stack(
+            children: [
+              widget.imagelink!.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: CachedNetworkImage(
+                        imageUrl: "${widget.imagelink}",
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        height: 120,
+                        width: 110,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 50,
+                      width: 110,
+                    ),
+              Positioned(
+                bottom: -5.0,
+                right: 0.0,
+                left: 0.0,
+                child: Container(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(0.0)),
+                        onPressed: widget.onTapOnAddCart,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            widget.addedOrNot
+                                ? Icon(CupertinoIcons.minus)
+                                : Icon(CupertinoIcons.add),
+                            widget.addedOrNot
+                                ? Text(
+                                    "REMOVE",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  )
+                                : Text("ADD",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class Final_cart extends StatefulWidget {
+  const Final_cart(
+      {Key? key,
+      required this.cartServicesForBookingpage,
+      required this.removeFromCart})
+      : super(key: key);
+
+  final ServiceModel cartServicesForBookingpage;
+  final GestureTapCallback? removeFromCart;
+
+  @override
+  State<Final_cart> createState() => _Final_cartState();
+}
+
+class _Final_cartState extends State<Final_cart> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${widget.cartServicesForBookingpage.title}",
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 16,
+                              overflow: TextOverflow.ellipsis,
+                              color: MyThemes.txtwhite),
+                        ),
+                        Text(
+                          "₹ ${widget.cartServicesForBookingpage.price}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18,
+                              overflow: TextOverflow.ellipsis,
+                              color: MyThemes.txtwhite),
+                        ),
+                      ]),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shadowColor: MyThemes.purple,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(0.0),
+                      primary: MyThemes.purple),
+                  onPressed: widget.removeFromCart,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 14, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(CupertinoIcons.minus),
+                        Text(
+                          "REMOVE",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
                   ),
                 )
-              : SizedBox()
-        ],
+              ],
+            ),
+            Divider(
+              color: MyThemes.purple,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Common_Widget extends StatelessWidget {
+  const Common_Widget(this.name, {Key? key}) : super(key: key);
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        color: MyThemes.purple,
+        child: Container(
+          width: 130,
+          height: 40,
+          child: Center(
+            child: Text(
+              name,
+              style: TextStyle(
+                  color: MyThemes.txtwhite, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ),
     );
   }

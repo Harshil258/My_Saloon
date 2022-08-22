@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyThemes{
 
   static Color first =const Color(0xff010101);
+  static Color five =const Color(0xff0e0e0e);
   static Color second = Color(0xff8372ff);
   static Color third = Color(0xffdcdcdc);
   static Color four = Color(0xffa8a8a8);
@@ -25,6 +26,7 @@ class MyThemes{
   static MaterialColor txtwhite = MaterialColor(0xffdcdcdc, color);
   static MaterialColor txtdarkwhite = MaterialColor(0xffa8a8a8, color);
   static MaterialColor purple = MaterialColor(0xff8372ff, color);
+  static MaterialColor lightblack = MaterialColor(0xff0e0e0e, color);
 
 }
 

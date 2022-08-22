@@ -1,50 +1,82 @@
 // To parse this JSON data, do
 //
-//     final mainModel = mainModelFromJson(jsonString);
+//     final salonModel = salonModelFromJson(jsonString);
+
 import 'dart:convert';
 
-MainModel mainModelFromJson(String str) => MainModel.fromJson(json.decode(str));
+SalonModel salonModelFromJson(String str) =>
+    SalonModel.fromJson(json.decode(str));
 
-String mainModelToJson(MainModel data) => json.encode(data.toJson());
+String salonModelToJson(SalonModel data) => json.encode(data.toJson());
 
-class MainModel {
-  MainModel({
-    required this.id,
-    required this.salonId,
-    required this.salonName,
-    required this.services,
-    required this.image,
-    required this.rating,
-    required this.address,
-  });
+SalonModel fromQuerySnapshot(snapshot) {
+  return SalonModel(
+      rating2: List<Rating2>.from(snapshot.data()['rating2'].map((item) {
+        return Rating2(review: item['review'], rating: item['rating']);
+      })),
+      location: snapshot.data()['location'],
+      salonName: snapshot.data()['salon_name'],
+      image: snapshot.data()['image'],
+      address: snapshot.data()['address'],
+      salonId: snapshot.data()['salon_id'],
+      category: snapshot.data()['category']);
+}
 
+class SalonModel {
+  SalonModel(
+      {required this.rating2,
+      required this.salonId,
+      required this.location,
+      required this.salonName,
+      required this.image,
+      required this.address,
+      required this.category});
+
+  List<Rating2> rating2;
   String salonId;
+  String location;
   String salonName;
-  List<dynamic> services;
   String image;
-  List<dynamic> rating;
   String address;
-  String id;
+  String category;
 
-  factory MainModel.fromJson(Map<String, dynamic> json) {
-    print("asdgsdgsdgdg  ${json["\$id"]}");
-    return MainModel(
-        salonId: json["salon_id"],
-        salonName: json["salon_name"],
-        services: List<dynamic>.from(json["services"].map((x) => x)),
-        image: json["image"],
-        rating: List<dynamic>.from(json["rating"].map((x) => x)),
-        address: json["address"],
-        id: json["\$id"]);
-  }
+  factory SalonModel.fromJson(Map<String, dynamic> json) => SalonModel(
+      rating2:
+          List<Rating2>.from(json["rating2"].map((x) => Rating2.fromJson(x))),
+      salonId: json["salon_id"],
+      location: json["location"],
+      salonName: json["salon_name"],
+      image: json["image"],
+      address: json["address"],
+      category: json["category"]);
 
   Map<String, dynamic> toJson() => {
+        "rating2": List<dynamic>.from(rating2.map((x) => x.toJson())),
         "salon_id": salonId,
+        "location": location,
         "salon_name": salonName,
-        "services": List<dynamic>.from(services.map((x) => x)),
         "image": image,
-        "rating": List<dynamic>.from(rating.map((x) => x)),
         "address": address,
-        "id" : id
+        "category": category
+      };
+}
+
+class Rating2 {
+  Rating2({
+    required this.review,
+    required this.rating,
+  });
+
+  String review;
+  int rating;
+
+  factory Rating2.fromJson(Map<String, dynamic> json) => Rating2(
+        review: json["review"],
+        rating: json["rating"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "review": review,
+        "rating": rating,
       };
 }

@@ -2,112 +2,75 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class sqlServices {
-  Database? db;
-
-  Future openDb() async {
-    try {
-      var databasepath = await getDatabasesPath();
-      print("database path : ${databasepath}");
-      String path = join(databasepath, 'cart.db');
-      db = await openDatabase(
-        path,
-        version: 1,
-        onCreate: (Database db, int version) {
-          this.db = db;
-          createTables();
-        },
-      );
-      print("opendatabase  database ${db.toString()}");
-    } catch (e) {
-      print("error in creating database : ${e}");
-    }
+  Future<Database> openDb() async {
+    var databasepath = await getDatabasesPath();
+    String path = join(databasepath, 'cart.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) {
+        var query = "CREATE TABLE IF NOT EXISTS CART "
+            "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "documentid TEXT,"
+            "service_id TEXT, "
+            "addedToCart INTEGER);";
+        db.execute(query);
+      },
+    );
   }
 
-  createTables() async {
+  Future saveRecord(String salonid, String serviceid, bool addedToCart) async {
     try {
-      var query = "CREATE TABLE IF NOT EXISTS CART "
-          "(documentid TEXT PRIMARY KEY, "
-          "service_id TEXT, "
-          "addedToCart INTEGER, "
-          "bookedOrNot INTEGER, "
-          "timeslot TEXT)";
-      await db?.execute(query);
-      print("table created");
-      var query2 =
-          'INSERT INTO CART (documentid , service_id, addedToCart, bookedOrNot, timeSlot) '
-          'VALUES("124245","aseryserty",1,1,"rtyewrtyert")';
-      await db?.execute(query2);
-      var query3 =
-          'INSERT INTO CART (documentid , service_id, addedToCart, bookedOrNot, timeSlot) '
-          'VALUES("stdufsdgjhfg","aseryserty",1,1,"rtyewrtyert")';
-      await db?.execute(query3);
-
-      var list = await db?.rawQuery('SELECT * FROM CART', []);
-      print("sdgsdgsdgdsg  ${list.toString()}");
+      Database _db = await openDb();
+      print(
+          'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0}")');
+      await _db.transaction((txn) async {
+        var query = 'INSERT INTO CART (documentid , service_id, addedToCart) '
+            'VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0})';
+        await txn.rawInsert(query);
+        print("record inserted successfully ");
+      });
+      print("sdgsdgsdgsdgdgdg11111111111");
     } catch (e) {
-      print("ERROR IN CREATE TABLE");
-      print(e);
+      print("sdgsdgsdgsdgdgdg  ${e}");
     }
-  }
-
-  Future saveRecord(String salonid, String serviceid, bool addedToCart,
-      bool bookedOrNot, String timeSlot) async {
-    // try{
-    print(
-        'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart, bookedOrNot, timeSlot) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0},${bookedOrNot ? 1 : 0},"${timeSlot}")');
-    await db!.transaction((txn) async {
-      var query =
-          'INSERT INTO CART (documentid , service_id, addedToCart, bookedOrNot, timeSlot) '
-          'VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0},${bookedOrNot ? 1 : 0},"${timeSlot}")';
-      await txn.rawInsert(query);
-      print("record inserted successfully ");
-    });
-    print("sdgsdgsdgsdgdgdg11111111111");
-    // }catch(e){
-    //   print("sdgsdgsdgsdgdgdg  ${e}");
-    //
-    // }
   }
 
   Future getPerticularList(String salonid) async {
     try {
-      var list = await db
-          ?.rawQuery('SELECT * FROM CART where documentid = ${salonid}', []);
-      return list ?? [];
+      Database _db = await openDb();
+      var list = await _db
+          .rawQuery('SELECT * FROM CART where documentid = ?', [salonid]);
+      print("sdfgsdgsdgd ${list.toList().toString()}");
+      return list;
     } catch (e) {
       return Future.error(e);
     }
   }
 
   Future getCartList() async {
-    // try {
-      // var query2 =
-      //     'INSERT INTO CART (documentid , service_id, addedToCart, bookedOrNot, timeSlot) '
-      //     'VALUES("124245","aseryserty",1,1,"rtyewrtyert")';
-      // await db?.execute(query2);
-
-      // await this.db!.transaction((txn) async{
-      //   var list =  txn.execute("SELECT * FROM CART",[]);
-      //   print("getcartlist ${list.toString()}");
-      // });
-    print("select  database ${db.toString()}");
-    var list = await db?.rawQuery('SELECT * FROM CART', []);
-      print("getcartlist ${list.toString()}");
-      return list ?? [];
-    // } catch (e) {
-    //   return Future.error(e);
-    // }
+    try {
+      Database _db = await openDb();
+      // print("select  database ${_db.toString()}");
+      var list = await _db.rawQuery('SELECT * FROM CART', []);
+      // print("getcartlist ${list.toString()}");
+      return list;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
-  Future<bool> bookedOrNot(String documentid) async {
+  Future<bool> addedInCartOrNot(String service_id) async {
     try {
-      var record = await db
-          ?.rawQuery('SELECT * FROM CART where documentid = ${documentid}', []);
-      List list = record!.toList();
+      Database _db = await openDb();
+      var record = await _db
+          .rawQuery('SELECT * FROM CART where service_id = ${service_id}', []);
+      List list = record.toList();
+      print("function addedInCartOrNot  ${list.length} ");
 
-      if (list.elementAt(4) == 1) {
+      if(list.length > 0){
         return true;
-      } else {
+      }else{
         return false;
       }
     } catch (e) {
@@ -115,13 +78,9 @@ class sqlServices {
     }
   }
 
-  Future removeFromCart(String salonid) async {
-    if (bookedOrNot(salonid) == false) {
-      var query = "DELETE FROM CART where documentid = ${salonid}";
-      return await this.db?.rawDelete(query);
-    } else {
-      var query = "UPDATE CART set addedToCart = ?";
-      return await this.db?.rawUpdate(query, [0]);
-    }
+  Future removeFromCart(String serviceid) async {
+    Database _db = await openDb();
+    var query = "DELETE FROM CART WHERE service_id = '${serviceid}';";
+    return await _db.rawDelete(query);
   }
 }

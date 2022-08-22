@@ -1,53 +1,56 @@
 // To parse this JSON data, do
 //
-//     final mainModel = mainModelFromJson(jsonString);
+//     final serviceModel = serviceModelFromJson(jsonString);
 
 import 'dart:convert';
 
-servicemodel servicemodelFromJson(String str) =>
-    servicemodel.fromJson(json.decode(str));
+ServiceModel serviceModelFromJson(String str) =>
+    ServiceModel.fromJson(json.decode(str));
 
-String servicemodelToJson(servicemodel data) => json.encode(data.toJson());
+String serviceModelToJson(ServiceModel data) => json.encode(data.toJson());
 
-class servicemodel {
-  servicemodel({
-    required this.serviceId,
+ServiceModel fromQuerySnapshotService(snapshot) {
+  return ServiceModel(
+      title: snapshot.data()['Title'],
+      description: snapshot.data()['description'],
+      price: snapshot.data()['Price'],
+      image: snapshot.data()['image'],
+      salonId: snapshot.data()['salon_id'],
+      serviceId: snapshot.data()['service_id']);
+}
+
+class ServiceModel {
+  ServiceModel({
     required this.title,
     required this.price,
-    required this.image,
     required this.description,
+    required this.image,
     required this.salonId,
-    required this.id,
+    required this.serviceId,
   });
 
-  int serviceId;
   String title;
   int price;
-  String image;
   String description;
+  String image;
   String salonId;
-  String id;
+  String serviceId;
 
-  factory servicemodel.fromJson(Map<String, dynamic> json) {
-    print("srtjrtjryjtj ${json.toString()}");
-    return servicemodel(
-      serviceId: json["serviceId"],
-      title: json["Title"],
-      price: json["Price"],
-      image: json["Image"],
-      description: json["Description"],
-      salonId: json["salon_id"],
-      id: json["\$id"],
-    );
-  }
+  factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
+        title: json["Title"],
+        price: json["Price"],
+        description: json["description"],
+        image: json["image"],
+        salonId: json["salon_id"],
+        serviceId: json["service_id"],
+      );
 
   Map<String, dynamic> toJson() => {
-        "serviceId": serviceId,
         "Title": title,
         "Price": price,
-        "Image": image,
-        "Description": description,
+        "description": description,
+        "image": image,
         "salon_id": salonId,
-        "id": id,
+        "service_id": serviceId,
       };
 }

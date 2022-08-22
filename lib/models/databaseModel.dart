@@ -3,38 +3,33 @@
 //     final mainModel = mainModelFromJson(jsonString);
 import 'dart:convert';
 
-databaseModel mainModelFromJson(String str) => databaseModel.fromJson(json.decode(str));
+DatabaseModel mainModelFromJson(String str) => DatabaseModel.fromJson(json.decode(str));
 
-String mainModelToJson(databaseModel data) => json.encode(data.toJson());
+String mainModelToJson(DatabaseModel data) => json.encode(data.toJson());
 
-class databaseModel {
-  databaseModel({
+class DatabaseModel {
+  DatabaseModel({
     required this.documentid,
     required this.serviceId,
-    required this.addedToCart,
-    required this.bookedOrNot,
-    required this.timeslot,
+    required this.addedToCart
   });
 
   final String documentid;
   final String serviceId;
   final int addedToCart;
-  final int bookedOrNot;
-  final String timeslot;
 
-  factory databaseModel.fromJson(Map<String, dynamic> json) => databaseModel(
-    documentid: json["documentid"],
-    serviceId: json["service_id"],
-    addedToCart: json["addedToCart"],
-    bookedOrNot: json["bookedOrNot"],
-    timeslot: json["timeslot"],
-  );
+  factory DatabaseModel.fromJson(Map<String, dynamic> json) {
+    print("ttttttttttt  ${json["documentid"]}     ${json["service_id"]}     ${json["addedToCart"]}");
+    return DatabaseModel(
+        documentid: json["documentid"],
+        serviceId: json["service_id"],
+        addedToCart: json["addedToCart"]);
+  }
+
 
   Map<String, dynamic> toJson() => {
     "documentid": documentid,
     "service_id": serviceId,
-    "addedToCart": addedToCart,
-    "bookedOrNot": bookedOrNot,
-    "timeslot": timeslot,
+    "addedToCart": addedToCart
   };
 }
