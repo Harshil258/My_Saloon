@@ -26,6 +26,9 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
+
+
 dependencies:
   flutter:
     sdk: flutter
@@ -58,7 +61,16 @@ dependencies:
   url_launcher: ^6.1.5
   geolocator: ^9.0.1
   geocoder: ^0.2.1
+
   location: ^4.2.0
+  flutter_launcher_icons: ^0.10.0
+
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.jpg"
 
 
 dev_dependencies:

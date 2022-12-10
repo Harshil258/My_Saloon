@@ -31,6 +31,7 @@ class FirebaseService {
     final CollectionReference collection =
         FirebaseFirestore.instance.collection('Users');
     DocumentSnapshot<Object?> model = await collection.doc(user!.uid).get();
+    print("Current user : ${user!.uid}");
     return Usermodel(
         uid: model.get("uid"),
         name: model.get("Name"),

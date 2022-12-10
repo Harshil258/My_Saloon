@@ -44,14 +44,16 @@ class DetailPageController extends GetxController {
   }
 
   Future<bool> getuserdata() async{
-    modelforintent = await itemService.getuserdata();
+    modelforintent = (await itemService.getuserdata());
+    print("model class modelforintent : ${modelforintent}");
+
+    update();
     if(modelforintent!.uid != null){
       isusermodelinitilize = true;
       return true;
     }else{
       return false;
     }
-    update();
     print("sadgsdgdg   ${modelforintent!.surname}");
   }
 
@@ -64,6 +66,7 @@ class DetailPageController extends GetxController {
     cartservicetotal = 0.obs;
     for(var ele in servicemodellist){
       if(cartlist.indexWhere((element) => element.serviceId == ele.serviceId) > -1){
+        print("ele ${ele.serviceId.toString()}");
         cartServicesForBookingpage.add(ele);
         cartservicetotal = cartservicetotal + ele.price;
       }
@@ -76,13 +79,13 @@ class DetailPageController extends GetxController {
 
   getCartList(String salonid) async {
     try {
-      print("ggggggggggggggg ");
       List list = await itemService.getPerticularList(salonid);
       cartlist.clear();
       for(var element in list){
         cartlist.add(DatabaseModel.fromJson(element));
       }
       update();
+
     } catch (e) {
       print("fghdfghdfgh  $e");
     }
@@ -93,9 +96,14 @@ class DetailPageController extends GetxController {
     update();
   }
 
-  removeRecord(String service_id){
-    itemService.removeRecord(service_id);
+  removeRecord(String service_id) async {
+    await itemService.removeRecord(service_id);
+    print("removecall ${cartServicesForBookingpage.length}");
     update();
+  }
+
+  deleteTable() async{
+    await itemService.deleteTable();
   }
 
   bool addedInCartOrNot(String service_id){

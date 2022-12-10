@@ -28,6 +28,7 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
   @override
   void initState() {
     super.initState();
+    detailPagecontroller.loadCartServices();
     mockBookingService = BookingService(
         serviceName: detailPagecontroller.modelforintent!.uid,
         serviceDuration: 30,
@@ -36,14 +37,11 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
         userName: detailPagecontroller.modelforintent!.name +
             " " +
             detailPagecontroller.modelforintent!.surname,
-        uid : detailPagecontroller.modelforintent!.uid,
-        email: detailPagecontroller.modelforintent!.email,
-        phoneNumber: detailPagecontroller.modelforintent!.mobilenumber,
-        placeAddress: "",
-        placeId: "",
+        userId: detailPagecontroller.modelforintent!.uid,
+        userEmail: detailPagecontroller.modelforintent!.email,
+        userPhoneNumber: detailPagecontroller.modelforintent!.mobilenumber,
         servicePrice:
             int.parse(detailPagecontroller.cartservicetotal.toString()));
-    detailPagecontroller.loadCartServices();
   }
 
   List<DateTimeRange> generatePauseSlots() {
@@ -202,18 +200,27 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
                           return Final_cart(
                             cartServicesForBookingpage:
                                 controller.cartServicesForBookingpage[index],
-                            removeFromCart: () {
+                            removeFromCart: () async {
                               setState(
                                 () async {
-                                  await controller.removeRecord(controller
-                                      .servicemodellist[index].serviceId);
-                                  await controller.getCartList(controller
-                                      .servicemodellist[index].salonId);
-                                  await controller.loadCartServices();
                                   print(
-                                      "dfhsdfh  ${await controller.cartServicesForBookingpage.length}");
+                                      "dfhsdfh before  ${await controller.cartServicesForBookingpage.toList().toString()}");
+                                  print(
+                                      "dfhsdfh remove  ${controller.cartServicesForBookingpage[index].serviceId}");
+                                  await controller.removeRecord(controller
+                                      .cartServicesForBookingpage[index]
+                                      .serviceId);
+                                  await controller.getCartList(controller
+                                      .cartServicesForBookingpage[index]
+                                      .salonId);
+                                  await controller.loadCartServices();
+                                  if (controller
+                                      .cartServicesForBookingpage.isEmpty) {
+                                    Navigator.pop(context);
+                                  }
                                 },
                               );
+
                             },
                           );
                         },

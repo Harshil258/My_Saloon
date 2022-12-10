@@ -112,7 +112,7 @@ class _detail_pageState extends State<detail_page> {
                     );
                   } else {
                     sliverlist =
-                        SliverToBoxAdapter(child: CircularProgressIndicator());
+                        SliverToBoxAdapter(child: Center(child: CircularProgressIndicator(color: MyThemes.txtwhite,)));
                   }
                   return CustomScrollView(
                     slivers: [

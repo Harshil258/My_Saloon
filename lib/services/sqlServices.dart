@@ -78,8 +78,15 @@ class sqlServices {
     }
   }
 
+  Future deleteTables() async {
+    Database _db = await openDb();
+    var query = "DROP TABLE IF EXISTS CART;";
+    _db.execute(query);
+  }
+
   Future removeFromCart(String serviceid) async {
     Database _db = await openDb();
+    print("removecall ${serviceid}");
     var query = "DELETE FROM CART WHERE service_id = '${serviceid}';";
     return await _db.rawDelete(query);
   }

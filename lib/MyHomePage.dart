@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoder/model.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:my_saloon/models/salonmodel.dart';
@@ -60,8 +61,7 @@ Future<Address> getUserLocation() async {
     myLocation = null;
   }
   var currentLocation = myLocation;
-  final coordinates =
-      new Coordinates(myLocation!.latitude, myLocation!.longitude);
+  final coordinates = Coordinates(myLocation!.latitude, myLocation!.longitude);
   var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;

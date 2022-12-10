@@ -176,7 +176,11 @@ class _ProfileState extends State<Profile> {
             Authentication.signOut(context: context);
             detailPagecontroller
                 .isusermodelinitilize = false;
+            detailPagecontroller.deleteTable();
             detailPagecontroller.modelforintent = null;
+            detailPagecontroller.dispose();
+            // Get.delete<DetailPageController>();
+            // Get.put(DetailPageController());
           },
           child: Padding(
             padding: const EdgeInsets.all(12.0),

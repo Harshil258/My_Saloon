@@ -28,6 +28,9 @@ class ItemService {
   Future removeRecord(String service_id) async {
     return await sqlService.removeFromCart(service_id);
   }
+  Future deleteTable() async {
+    return await sqlService.deleteTables();
+  }
 
   Future addedInCartOrNot(String service_id) async {
     return await sqlService.addedInCartOrNot(service_id);

@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:my_saloon/services/auth.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/signup_process.dart';
+import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/util/routes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../themes.dart';
 import 'LoginPage.dart';
 import 'MyHomePage.dart';
 
@@ -165,28 +165,33 @@ class _RegisterState extends State<Register> {
                                           setState(() {
                                             changebutton = true;
                                           });
-                                          await Future.delayed(
-                                              Duration(seconds: 1));
+                                          // await Future.delayed(Duration(seconds: 1));-
+                                          await detailPagecontroller
+                                              .getuserdata()
+                                              // .whenComplete(() => )
+                                              .then(
+                                            (value) {
+                                              print(
+                                                  "detailPagecontroller modelforintent : ${detailPagecontroller.modelforintent}");
 
-                                          detailPagecontroller.getuserdata();
-                                          // detailPagecontroller
-                                          //     .isusermodelinitilize = true;
+                                              if (detailPagecontroller
+                                                      .modelforintent !=
+                                                  null) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const MyHomePage()));
+                                              } else {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Signup_process()));
+                                              }
+                                            },
+                                          );
 
-                                          if (detailPagecontroller
-                                                  .isusermodelinitilize ==
-                                              true) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MyHomePage()));
-                                          } else {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Signup_process()));
-                                          }
                                           setState(() {
                                             changebutton = false;
                                           });

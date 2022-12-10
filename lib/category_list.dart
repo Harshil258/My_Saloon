@@ -23,6 +23,7 @@ class _category_listState extends State<category_list> {
         initialData: [],
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            print("rghsarfegr ${snapshot.data.toString()}");
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
