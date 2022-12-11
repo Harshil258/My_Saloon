@@ -34,6 +34,7 @@ class DetailPageController extends GetxController {
 
 
   Future<List<SalonModel>> callfirebase() async {
+    print("calling firebase");
     final CollectionReference collection =
     FirebaseFirestore.instance.collection('salons');
     QuerySnapshot querySnapshot = await collection.get();

@@ -165,7 +165,8 @@ class _RegisterState extends State<Register> {
                                           setState(() {
                                             changebutton = true;
                                           });
-                                          await Future.delayed(Duration(seconds: 1));
+                                          await Future.delayed(
+                                              Duration(seconds: 1));
                                           await detailPagecontroller
                                               .getuserdata()
                                               .then(

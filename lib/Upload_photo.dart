@@ -23,11 +23,16 @@ class Upload_Photo extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(22.0),
-                      child: SvgPicture.asset(
-                        "assets/backpurple.svg",
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(22.0),
+                        child: SvgPicture.asset(
+                          "assets/backpurple.svg",
+                        ),
                       ),
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(22, 0, 0, 0),

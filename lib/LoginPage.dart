@@ -174,7 +174,8 @@ class _LoginPageState extends State<LoginPage> {
                                     await Future.delayed(Duration(seconds: 1));
 
                                     print(
-                                        "detailPagecontroller modelforintent : ${detailPagecontroller.modelforintent}");
+                                        "detailPagecontroller modelforintent : ${detailPagecontroller.modelforintent!.uid}");
+
                                     if (detailPagecontroller
                                             .modelforintent!.name !=
                                         "") {
