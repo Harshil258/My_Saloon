@@ -263,9 +263,8 @@ class _Signup_processState extends State<Signup_process> {
                                   setState(() {
                                     loading = true;
                                   });
-
-                                  if (!detailPagecontroller
-                                      .modelforintent.isNull) {
+                                  if (detailPagecontroller
+                                      .modelforintent!.name != "") {
                                     // when user data is already filled
                                     detailPagecontroller.modelforintent = new Usermodel(
                                         uid:

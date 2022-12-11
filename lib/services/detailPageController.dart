@@ -45,10 +45,10 @@ class DetailPageController extends GetxController {
 
   Future<bool> getuserdata() async{
     modelforintent = (await itemService.getuserdata());
-    print("model class modelforintent : ${modelforintent}");
+    print("model class modelforintent : ${modelforintent!.name}");
 
-    update();
-    if(modelforintent!.uid != null){
+    // update();
+    if(modelforintent!.uid != ""){
       isusermodelinitilize = true;
       return true;
     }else{

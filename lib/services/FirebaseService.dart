@@ -32,14 +32,27 @@ class FirebaseService {
         FirebaseFirestore.instance.collection('Users');
     DocumentSnapshot<Object?> model = await collection.doc(user!.uid).get();
     print("Current user : ${user!.uid}");
-    return Usermodel(
-        uid: model.get("uid"),
-        name: model.get("Name"),
-        surname: model.get("Surname"),
-        email: model.get("email"),
-        mobilenumber: model.get("mobilenumber"),
-        address: model.get("address"),
-        photo: model.get("photo"));
+    print("Current user : ${model.data().toString()}");
+    if(model.data().isNull){
+      return Usermodel(
+          uid: "",
+          name: "",
+          surname: "",
+          email: "",
+          mobilenumber: "",
+          address: "",
+          photo: "");
+    }else{
+      return Usermodel(
+          uid: model.get("uid"),
+          name: model.get("Name"),
+          surname: model.get("Surname"),
+          email: model.get("email"),
+          mobilenumber: model.get("mobilenumber"),
+          address: model.get("address"),
+          photo: model.get("photo"));
+    }
+
   }
 
   Future<String?> storeData(String userid, String name, String surname,

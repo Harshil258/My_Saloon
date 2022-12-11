@@ -168,13 +168,16 @@ class _LoginPageState extends State<LoginPage> {
                                   setState(() {
                                     changebutton = true;
                                   });
-                                  // await Future.delayed(Duration(seconds: 1));
-
                                   await detailPagecontroller
                                       .getuserdata()
-                                      .then((value) {
-                                    if (detailPagecontroller.modelforintent !=
-                                        null) {
+                                      .then((value) async {
+                                    await Future.delayed(Duration(seconds: 1));
+
+                                    print(
+                                        "detailPagecontroller modelforintent : ${detailPagecontroller.modelforintent}");
+                                    if (detailPagecontroller
+                                            .modelforintent!.name !=
+                                        "") {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

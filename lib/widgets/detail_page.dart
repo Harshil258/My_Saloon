@@ -27,6 +27,7 @@ class _detail_pageState extends State<detail_page> {
 
   late DetailPageController detailPageController =
       Get.put(DetailPageController());
+
   bool listlodedornot = false;
 
   Future<List<ServiceModel>> _loadservices() async {
@@ -45,6 +46,7 @@ class _detail_pageState extends State<detail_page> {
   @override
   void initState() {
     super.initState();
+    _loadservices();
     detailPageController.loadservicesFromfirebase(widget.salonid);
   }
 

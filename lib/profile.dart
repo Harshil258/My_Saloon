@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                                 detailPagecontroller
                                         .modelforintent!.email.isNotEmpty
                                     ? detailPagecontroller.modelforintent!.email
-                                    : "email is not set",
+                                    : "Please Set Email",
                                 style: TextStyle(
                                     color: MyThemes.txtdarkwhite, fontSize: 14),
                               ),
@@ -132,7 +132,7 @@ class _ProfileState extends State<Profile> {
                                         .modelforintent!.mobilenumber.isNotEmpty
                                     ? detailPagecontroller
                                         .modelforintent!.mobilenumber
-                                    : "mobile number is not set",
+                                    : "Please set mobile number",
                                 style: TextStyle(
                                     color: MyThemes.txtdarkwhite, fontSize: 14),
                               ),
@@ -144,7 +144,7 @@ class _ProfileState extends State<Profile> {
                                         .modelforintent!.address.isNotEmpty
                                     ? detailPagecontroller
                                         .modelforintent!.address
-                                    : "Adderess is not set",
+                                    : "Please set Adderess",
                                 style: TextStyle(
                                     color: MyThemes.txtdarkwhite, fontSize: 14),
                               ),

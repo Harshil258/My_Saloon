@@ -165,18 +165,17 @@ class _RegisterState extends State<Register> {
                                           setState(() {
                                             changebutton = true;
                                           });
-                                          // await Future.delayed(Duration(seconds: 1));-
+                                          await Future.delayed(Duration(seconds: 1));
                                           await detailPagecontroller
                                               .getuserdata()
-                                              // .whenComplete(() => )
                                               .then(
                                             (value) {
                                               print(
                                                   "detailPagecontroller modelforintent : ${detailPagecontroller.modelforintent}");
 
                                               if (detailPagecontroller
-                                                      .modelforintent !=
-                                                  null) {
+                                                      .modelforintent!.uid !=
+                                                  "") {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
