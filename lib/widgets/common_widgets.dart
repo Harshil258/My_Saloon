@@ -208,7 +208,7 @@ class _Vertical_listview_itemState extends State<Vertical_listview_item> {
                     ],
                   ),
                   Text(
-                    widget.address,
+                    (widget.address.toString() == "null") ? "" : widget.address,
                     textAlign: TextAlign.center,
                     maxLines: 3,
                     style: TextStyle(

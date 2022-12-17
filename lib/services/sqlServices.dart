@@ -1,3 +1,4 @@
+import 'package:my_saloon/models/SalonBooking.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,6 +16,24 @@ class sqlServices {
             "service_id TEXT, "
             "addedToCart INTEGER);";
         db.execute(query);
+
+        query = "CREATE TABLE IF NOT EXISTS BOOKINGS "
+            "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "documentid TEXT,"
+            "service_id TEXT, "
+            "uid TEXT, "
+            "userName TEXT, "
+            "placeId TEXT, "
+            "serviceName TEXT, "
+            "serviceDuration INTEGER, "
+            "servicePrice INTEGER, "
+            "bookingStart TEXT, "
+            "bookingEnd TEXT, "
+            "email TEXT, "
+            "phoneNumber TEXT, "
+            "placeAddress TEXT, "
+            "bookingStart TEXT);";
+        db.execute(query);
       },
     );
   }
@@ -25,10 +44,30 @@ class sqlServices {
       print(
           'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0}")');
       await _db.transaction((txn) async {
-        var query = 'INSERT INTO CART (documentid , service_id, addedToCart) '
+        var query =
+            'INSERT INTO CART (documentid , service_id, uid,userName ,placeId ,serviceName ,) '
             'VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0})';
         await txn.rawInsert(query);
         print("record inserted successfully ");
+      });
+      print("sdgsdgsdgsdgdgdg11111111111");
+    } catch (e) {
+      print("sdgsdgsdgsdgdgdg  ${e}");
+    }
+  }
+
+  Future addInBookings(
+      String salonid, String serviceid, SalonBooking bookingdetails) async {
+    try {
+      Database _db = await openDb();
+      // print(
+      //     'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0}")');
+      await _db.transaction((txn) async {
+        var query =
+            'INSERT INTO BOOKINGS (documentid,service_id,uid,userName,placeId,serviceName,serviceDuration,servicePrice,bookingStart,bookingEnd,email,phoneNumber,placeAddress) '
+            'VALUES("${salonid}","${serviceid}","${bookingdetails.uid}","${bookingdetails.userName}","${bookingdetails.placeId}","${bookingdetails.serviceName}","${bookingdetails.serviceDuration}","${bookingdetails.servicePrice}","${bookingdetails.bookingStart}","${bookingdetails.bookingEnd}","${bookingdetails.email}","${bookingdetails.phoneNumber}","${bookingdetails.placeAddress}")';
+        await txn.rawInsert(query);
+        print("record inserted in addInBookings successfully ");
       });
       print("sdgsdgsdgsdgdgdg11111111111");
     } catch (e) {
@@ -68,9 +107,9 @@ class sqlServices {
       List list = record.toList();
       print("function addedInCartOrNot  ${list.length} ");
 
-      if(list.length > 0){
+      if (list.length > 0) {
         return true;
-      }else{
+      } else {
         return false;
       }
     } catch (e) {

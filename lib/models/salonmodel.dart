@@ -10,8 +10,9 @@ SalonModel salonModelFromJson(String str) =>
 String salonModelToJson(SalonModel data) => json.encode(data.toJson());
 
 SalonModel fromQuerySnapshot(snapshot) {
+  print("Salon list querySnapshot converting ${snapshot.data()['location']}");
   return SalonModel(
-      rating2: List<Rating2>.from(snapshot.data()['rating2'].map((item) {
+      rating2: List<Rating2>.from(snapshot.data()['rating'].map((item) {
         return Rating2(review: item['review'], rating: item['rating']);
       })),
       location: snapshot.data()['location'],

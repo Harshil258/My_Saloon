@@ -220,7 +220,6 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
                                   }
                                 },
                               );
-
                             },
                           );
                         },

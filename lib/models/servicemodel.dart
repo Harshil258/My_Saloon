@@ -4,19 +4,22 @@
 
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 ServiceModel serviceModelFromJson(String str) =>
     ServiceModel.fromJson(json.decode(str));
 
 String serviceModelToJson(ServiceModel data) => json.encode(data.toJson());
 
 ServiceModel fromQuerySnapshotService(snapshot) {
+  print("converting data to ServiceModel :: ${snapshot.data()['Title'].toString()}");
   return ServiceModel(
-      title: snapshot.data()['Title'],
-      description: snapshot.data()['description'],
-      price: snapshot.data()['Price'],
-      image: snapshot.data()['image'],
-      salonId: snapshot.data()['salon_id'],
-      serviceId: snapshot.data()['service_id']);
+      title: snapshot.data()['Title'].toString() == "null" ? "" : snapshot.data()['Title'],
+      description: snapshot.data()['description'].toString() == "null" ? "" : snapshot.data()['description'],
+      price: snapshot.data()['Price'].toString() == "null" ? 0 : snapshot.data()['Price'],
+      image: snapshot.data()['image'].toString() == "null" ? "" : snapshot.data()['image'],
+      salonId: snapshot.data()['salon_id'].toString() == "null" ? "" : snapshot.data()['salon_id'],
+      serviceId: snapshot.data()['service_id'].toString() == "null" ? "" : snapshot.data()['service_id']);
 }
 
 class ServiceModel {

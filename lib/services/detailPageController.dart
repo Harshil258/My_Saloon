@@ -22,13 +22,16 @@ class DetailPageController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     loadDB();
   }
 
   loadservicesFromfirebase(String salonid) async{
     servicemodellist = await itemService.loadservicesFromfirebase(salonid);
+
+    servicemodellist.forEach((element) {
+      print("servicemodellist :: ${element.toJson().toString()}");
+    });
     getCartList(salonid);
   }
 
@@ -38,9 +41,11 @@ class DetailPageController extends GetxController {
     final CollectionReference collection =
     FirebaseFirestore.instance.collection('salons');
     QuerySnapshot querySnapshot = await collection.get();
-
+    print("Salon list querySnapshot ${querySnapshot.docChanges.toSet().toString()}");
     salonlist = List.from(
         querySnapshot.docs.map((element) => fromQuerySnapshot(element)));
+    print("Salon list querySnapshot ${salonlist.toSet().toString()}");
+
     return salonlist;
   }
 

@@ -91,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     if (detailPagecontroller.isusermodelinitilize == false) {
-      detailPagecontroller.isusermodelinitilize = true;
       detailPagecontroller.getuserdata();
     }
     future = detailPagecontroller.callfirebase();
