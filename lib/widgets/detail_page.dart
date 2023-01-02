@@ -52,12 +52,6 @@ class _detail_pageState extends State<detail_page> {
 
   @override
   Widget build(BuildContext context) {
-    double rating = widget.salonmodel.rating2
-            .map((e) => e.rating)
-            .toList()
-            .reduce((a, b) => a + b) /
-        widget.salonmodel.rating2.length;
-
     Widget sliverlist;
 
     return SafeArea(
@@ -185,15 +179,7 @@ class _detail_pageState extends State<detail_page> {
                                       ),
                                       SizedBox(
                                         width: 5,
-                                      ),
-                                      Text(
-                                        "${rating.toStringAsFixed(2).toString()} (${widget.salonmodel.rating2.length}) + Rating",
-                                        textAlign: TextAlign.center,
-                                        maxLines: 3,
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            color: MyThemes.txtdarkwhite),
-                                      ),
+                                      )
                                     ],
                                   ),
                                   SizedBox(

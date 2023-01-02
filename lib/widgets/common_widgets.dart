@@ -147,13 +147,11 @@ class Vertical_listview_item extends StatefulWidget {
       {Key? key,
       required this.image,
       required this.title,
-      required this.rating,
       required this.address})
       : super(key: key);
 
   final String image;
   final String title;
-  final String rating;
   final String address;
 
   @override
@@ -197,14 +195,7 @@ class _Vertical_listview_itemState extends State<Vertical_listview_item> {
                       ),
                       SizedBox(
                         width: 5,
-                      ),
-                      Text(
-                        widget.rating,
-                        textAlign: TextAlign.center,
-                        maxLines: 3,
-                        style: TextStyle(
-                            fontSize: 13, overflow: TextOverflow.ellipsis),
-                      ),
+                      )
                     ],
                   ),
                   Text(

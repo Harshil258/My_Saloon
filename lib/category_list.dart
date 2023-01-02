@@ -27,11 +27,6 @@ class _category_listState extends State<category_list> {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  double rating = snapshot.data![index].rating2
-                          .map((e) => e.rating)
-                          .toList()
-                          .reduce((a, b) => a + b) /
-                      snapshot.data![index].rating2.length;
                   print("rghsarfegr ${snapshot.data.toString()}");
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -48,9 +43,6 @@ class _category_listState extends State<category_list> {
                       child: Vertical_listview_item(
                           image: snapshot.data![index].image,
                           title: snapshot.data![index].salonName,
-                          rating:
-                              "${rating.toStringAsFixed(2).toString()} (${snapshot.data![index].rating2.length.toString()}) + Rating",
-                          // "${snapshot.data![index].rating.map((e) => e).reduce((value, element) => value + element) / snapshot.data![index].rating.length}",
                           address: snapshot.data![index].address),
                     ),
                   );
