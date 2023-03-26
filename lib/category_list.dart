@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
-import 'package:my_saloon/widgets/detail_page.dart';
+import 'package:my_saloon/Screens/Detail_Screen.dart';
 
 import 'models/salonmodel.dart';
 
@@ -35,7 +35,7 @@ class _category_listState extends State<category_list> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => detail_page(
+                              builder: (context) => Detail_Screen(
                                   salonid: snapshot.data![index].salonId,
                                   salonmodel: snapshot.data![index]),
                             ));
@@ -52,7 +52,10 @@ class _category_listState extends State<category_list> {
             );
           } else {
             return SliverToBoxAdapter(
-              child: CircularProgressIndicator(color: MyThemes.purple),
+              child: Center(
+                child: CircularProgressIndicator(
+                color: MyThemes.purple,
+            )),
             );
           }
         });

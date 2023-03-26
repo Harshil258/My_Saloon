@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
+import 'package:intl/intl.dart';
 
 import 'models/SalonBooking.dart';
 import 'services/detailPageController.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 class SlotBookingPage extends StatefulWidget {
   const SlotBookingPage(this.salonName, this.salonid, {Key? key})
@@ -22,26 +25,14 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
   var detailPagecontroller = Get.find<DetailPageController>();
   CollectionReference bookings =
       FirebaseFirestore.instance.collection('salons');
-  late BookingService mockBookingService;
   final now = DateTime.now();
+  List<String> servicelist = [];
 
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
     detailPagecontroller.loadCartServices();
-    mockBookingService = BookingService(
-        serviceName: detailPagecontroller.modelforintent!.uid,
-        serviceDuration: 30,
-        bookingEnd: DateTime(now.year, now.month, now.day, 19, 0),
-        bookingStart: DateTime(now.year, now.month, now.day, 9, 0),
-        userName: detailPagecontroller.modelforintent!.name +
-            " " +
-            detailPagecontroller.modelforintent!.surname,
-        userId: detailPagecontroller.modelforintent!.uid,
-        userEmail: detailPagecontroller.modelforintent!.email,
-        userPhoneNumber: detailPagecontroller.modelforintent!.mobilenumber,
-        servicePrice:
-            int.parse(detailPagecontroller.cartservicetotal.toString()));
   }
 
   List<DateTimeRange> generatePauseSlots() {
@@ -57,26 +48,76 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
 
   CollectionReference<SalonBooking> getBookingStream(
       {required String placeId}) {
-    return bookings
+    print("place id :: ${placeId}");
+
+    bookings
         .doc(placeId)
-        .collection('bookings')
+        .collection("bookings")
+        .snapshots()
+        .listen((querySnapshot) {
+      querySnapshot.docChanges.forEach((change) {
+        if (change.type == DocumentChangeType.added) {
+          var booking = SalonBooking.fromJson(change.doc.data()!);
+          print("Booking added: ${booking.toJson()}");
+        }
+        if (change.type == DocumentChangeType.modified) {
+          var booking = SalonBooking.fromJson(change.doc.data()!);
+          print("Booking modified: ${booking.toJson()}");
+        }
+        if (change.type == DocumentChangeType.removed) {
+          var booking = SalonBooking.fromJson(change.doc.data()!);
+          print("Booking removed: ${booking.toJson()}");
+        }
+      });
+    });
+
+    var books = bookings
+        .doc(placeId)
+        .collection("bookings")
         .withConverter<SalonBooking>(
-          fromFirestore: (snapshots, _) =>
-              SalonBooking.fromJson(snapshots.data()!),
-          toFirestore: (snapshots, _) => snapshots.toJson(),
-        );
+      fromFirestore: (snapshots, _) {
+        var booking = SalonBooking.fromJson(snapshots.data()!);
+        print("Booking: ${booking.toJson()}");
+        return booking;
+      },
+      toFirestore: (snapshots, _) {
+        print("sfdhgfdgsdfg  ${snapshots.toJson()}");
+        return snapshots.toJson();
+      },
+    );
+    return books;
+  }
+
+  String convertDateTime(String initialDateTimeString) {
+    final initialDateTime = DateTime.parse(initialDateTimeString);
+    final newDateTimeString =
+        DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(initialDateTime);
+    return newDateTimeString;
   }
 
   Stream<dynamic>? getBookingStreamFirebase(
       {required DateTime end, required DateTime start}) {
-    return getBookingStream(placeId: widget.salonid)
-        .where('bookingStart', isGreaterThanOrEqualTo: start)
-        .where('bookingStart', isLessThanOrEqualTo: end)
+    var bookings = getBookingStream(placeId: widget.salonid)
+        .where('bookingStart',
+            isGreaterThanOrEqualTo: convertDateTime(start.toString()))
+        .where('bookingStart', isLessThanOrEqualTo: end.toString())
         .snapshots();
+
+    bookings.length.then((value) {
+      print("getBookingStreamFirebase bookings value:: ${value}  ");
+    });
+
+    bookings.forEach((element) {
+      print(
+          "getBookingStreamFirebase :: ${element.docs.length}    start   ${start.toString()}       end    ${end}");
+    });
+    return bookings;
   }
 
   List<DateTimeRange> convertStreamResultFirebase(
       {required dynamic streamResult}) {
+    print("streamResult ${streamResult.size}");
+
     List<DateTimeRange> converted = [];
     for (var i = 0; i < streamResult.size; i++) {
       final item = streamResult.docs[i].data();
@@ -89,16 +130,34 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
 
   Future<dynamic> uploadBookingFirebase(
       {required BookingService newBooking}) async {
+    detailPagecontroller.cartServicesForBookingpage.forEach((element) async {
+      await detailPagecontroller.removeRecord(element.serviceId);
+    });
+    detailPagecontroller.cartServicesForBookingpage.clear();
+    detailPagecontroller.getCartList(widget.salonid);
+
+    print("clear bookings");
+    print(
+        "after bookings   ${detailPagecontroller.cartServicesForBookingpage.toSet().toString()}");
+
     await bookings
         .doc(widget.salonid)
         .collection('bookings')
         .add(newBooking.toJson())
         .then((value) => print("Booking Added ${value.get().toString()}"))
         .catchError((error) => print("Failed to add booking: $error"));
+    Get.back();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    servicelist.clear();
+    for (var element in detailPagecontroller.cartServicesForBookingpage.obs) {
+      servicelist.add(element.serviceId);
+    }
+    print("service List :: ${servicelist.toSet().toString()}");
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: MyThemes.lightblack,
@@ -201,25 +260,18 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
                             cartServicesForBookingpage:
                                 controller.cartServicesForBookingpage[index],
                             removeFromCart: () async {
-                              setState(
-                                () async {
-                                  print(
-                                      "dfhsdfh before  ${await controller.cartServicesForBookingpage.toList().toString()}");
-                                  print(
-                                      "dfhsdfh remove  ${controller.cartServicesForBookingpage[index].serviceId}");
-                                  await controller.removeRecord(controller
-                                      .cartServicesForBookingpage[index]
-                                      .serviceId);
-                                  await controller.getCartList(controller
-                                      .cartServicesForBookingpage[index]
-                                      .salonId);
-                                  await controller.loadCartServices();
-                                  if (controller
-                                      .cartServicesForBookingpage.isEmpty) {
-                                    Navigator.pop(context);
-                                  }
-                                },
-                              );
+                              print("dfhsdfh before  ${await controller.cartServicesForBookingpage.toList().toString()}");
+                              print("dfhsdfh remove  ${controller.cartServicesForBookingpage[index].serviceId}");
+                              await controller.removeRecord(controller
+                                  .cartServicesForBookingpage[index].serviceId);
+                              await controller.getCartList(controller
+                                  .cartServicesForBookingpage[index].salonId);
+                              await controller.loadCartServices();
+                              if (controller
+                                  .cartServicesForBookingpage.isEmpty) {
+                                Navigator.pop(context);
+                              }
+                              setState(() {});
                             },
                           );
                         },
@@ -248,13 +300,35 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
           SizedBox(
             height: 600,
             child: BookingCalendar(
-              bookingService: mockBookingService,
+              bookingService: BookingService(
+                servicesId: servicelist,
+                serviceName: detailPagecontroller.modelforintent!.uid,
+                serviceDuration: 30,
+                bookingStart: DateTime(now.year, now.month, now.day, 9, 0),
+                bookingEnd: DateTime(now.year, now.month, now.day, 22, 0),
+                userName: detailPagecontroller.modelforintent!.name +
+                    " " +
+                    detailPagecontroller.modelforintent!.surname,
+                userId: detailPagecontroller.modelforintent!.uid,
+                userEmail: detailPagecontroller.modelforintent!.email,
+                userPhoneNumber:
+                    detailPagecontroller.modelforintent!.mobilenumber,
+                servicePrice: int.parse(
+                  detailPagecontroller.cartservicetotal.toString(),
+                ),
+              ),
               convertStreamResultToDateTimeRanges: convertStreamResultFirebase,
               getBookingStream: getBookingStreamFirebase,
               uploadBooking: uploadBookingFirebase,
-              uploadingWidget: const CircularProgressIndicator(),
+              uploadingWidget: Center(
+                child: const CircularProgressIndicator(
+                  color: Colors.deepPurpleAccent,
+                ),
+              ),
+              startingDayOfWeek: StartingDayOfWeek.sunday,
               loadingWidget: const Text('Fetching data...'),
               hideBreakTime: false,
+              pauseSlotText: 'Not Available',
               pauseSlots: generatePauseSlots(),
               bookingButtonColor: MyThemes.purple,
               bookingButtonText: "Book Now",

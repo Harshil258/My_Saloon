@@ -9,15 +9,15 @@ import 'package:geocoder/model.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:my_saloon/models/salonmodel.dart';
-import 'package:my_saloon/profile.dart';
+import 'package:my_saloon/Screens/Profile_Screen.dart';
 import 'package:my_saloon/search_page.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'category_detail_page.dart';
-import 'category_list.dart';
+import 'Caegory_Detail_Screen.dart';
+import '../category_list.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -121,7 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       CachedNetworkImage(
                           imageUrl: "${item}",
                           placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                              Center(
+                                  child: CircularProgressIndicator(
+                                    color: MyThemes.purple,
+                                  )),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                           fit: BoxFit.cover,
@@ -333,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Profile(),
+                                  builder: (context) => Profile_Screen(),
                                 ));
                           },
                           child: Padding(
@@ -477,7 +480,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => categoryu_detail_page(
+                                    builder: (context) => Caegory_Detail_Screen(
                                         categoryname[index])));
                           },
                           child: categories[index]);

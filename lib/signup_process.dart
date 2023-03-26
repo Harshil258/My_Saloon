@@ -252,7 +252,10 @@ class _Signup_processState extends State<Signup_process> {
                       height: 100,
                     ),
                     loading
-                        ? CircularProgressIndicator()
+                        ? Center(
+                        child: CircularProgressIndicator(
+                          color: MyThemes.purple,
+                        ))
                         : Align(
                             alignment: Alignment.bottomCenter,
                             child: InkWell(

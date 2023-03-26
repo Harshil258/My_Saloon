@@ -7,17 +7,17 @@ import 'package:my_saloon/models/salonmodel.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/themes.dart';
 
-import 'category_list.dart';
+import '../category_list.dart';
 
-class categoryu_detail_page extends StatefulWidget {
-  const categoryu_detail_page(this.categoryname, {Key? key}) : super(key: key);
+class Caegory_Detail_Screen extends StatefulWidget {
+  const Caegory_Detail_Screen(this.categoryname, {Key? key}) : super(key: key);
   final String categoryname;
 
   @override
-  State<categoryu_detail_page> createState() => _categoryu_detail_pageState();
+  State<Caegory_Detail_Screen> createState() => _Caegory_Detail_ScreenState();
 }
 
-class _categoryu_detail_pageState extends State<categoryu_detail_page> {
+class _Caegory_Detail_ScreenState extends State<Caegory_Detail_Screen> {
   late final Future<List<SalonModel>> future;
   var detailPagecontroller = Get.find<DetailPageController>();
 

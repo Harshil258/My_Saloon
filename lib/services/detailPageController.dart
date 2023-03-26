@@ -15,7 +15,7 @@ class DetailPageController extends GetxController {
   List<SalonModel> salonlist = [];
   List<DatabaseModel> cartlist = [];
   List<ServiceModel>  servicemodellist = [];
-  List<ServiceModel>  cartServicesForBookingpage = [];
+  List<ServiceModel>  cartServicesForBookingpage = <ServiceModel>[].obs;
   bool isusermodelinitilize = false;
   Usermodel? modelforintent = null;
   var cartservicetotal = 0.obs;
@@ -34,7 +34,6 @@ class DetailPageController extends GetxController {
     });
     getCartList(salonid);
   }
-
 
   Future<List<SalonModel>> callfirebase() async {
     print("calling firebase");

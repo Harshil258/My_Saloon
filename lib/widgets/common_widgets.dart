@@ -120,7 +120,10 @@ class _Horizontal_listview_itemState extends State<Horizontal_listview_item> {
               child: CachedNetworkImage(
                 imageUrl: "${widget.imageurl}",
                 placeholder: (context, url) =>
-                    CircularProgressIndicator(color: MyThemes.purple),
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: MyThemes.purple,
+                      )),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
                 height: 145,
@@ -162,54 +165,60 @@ class _Vertical_listview_itemState extends State<Vertical_listview_item> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: Image.network(
-              widget.image,
-              fit: BoxFit.cover,
-              height: 145,
-              width: 110,
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    style: TextStyle(
-                        fontSize: 16, overflow: TextOverflow.ellipsis),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        CupertinoIcons.star_circle,
-                        color: MyThemes.purple,
-                        size: 20.0,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      )
-                    ],
-                  ),
-                  Text(
-                    (widget.address.toString() == "null") ? "" : widget.address,
-                    textAlign: TextAlign.center,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontSize: 13, overflow: TextOverflow.ellipsis),
-                  )
-                ],
+      decoration: BoxDecoration(
+          border: Border.all(color: MyThemes.lightblack, width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.network(
+                widget.image,
+                fit: BoxFit.cover,
+                height: 145,
+                width: 110,
               ),
             ),
-          )
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: TextStyle(
+                          fontSize: 16, overflow: TextOverflow.ellipsis),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.star_circle,
+                          color: MyThemes.purple,
+                          size: 20.0,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        )
+                      ],
+                    ),
+                    Text(
+                      (widget.address.toString() == "null") ? "" : widget.address,
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      style: TextStyle(
+                          fontSize: 13, overflow: TextOverflow.ellipsis),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -241,110 +250,120 @@ class _custom_item_viewState extends State<custom_item_view> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.Name}",
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    style: TextStyle(
-                        fontSize: 16,
-                        overflow: TextOverflow.ellipsis,
-                        color: MyThemes.txtwhite),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    "${widget.Price} ₹",
-                    textAlign: TextAlign.center,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontSize: 16,
-                        overflow: TextOverflow.ellipsis,
-                        color: MyThemes.txtwhite),
-                  ),
-                  SizedBox(height: 2),
-                  widget.Description!.isNotEmpty
-                      ? ReadMoreText(
-                          "${widget.Description}",
-                          textAlign: TextAlign.start,
-                          trimLines: 2,
-                          colorClickableText: MyThemes.purple,
-                          trimMode: TrimMode.Line,
-                          trimCollapsedText: ' Show more',
-                          trimExpandedText: ' Show less',
-                          style: TextStyle(
-                              fontSize: 13,
-                              overflow: TextOverflow.ellipsis,
-                              color: MyThemes.txtdarkwhite),
-                        )
-                      : SizedBox()
-                ],
+      decoration: BoxDecoration(
+          border: Border.all(color: MyThemes.lightblack, width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${widget.Name}",
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: TextStyle(
+                          fontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          color: MyThemes.txtwhite),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      "${widget.Price} ₹",
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      style: TextStyle(
+                          fontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          color: MyThemes.txtwhite),
+                    ),
+                    SizedBox(height: 2),
+                    widget.Description!.isNotEmpty
+                        ? ReadMoreText(
+                            "${widget.Description}",
+                            textAlign: TextAlign.start,
+                            trimLines: 2,
+                            colorClickableText: MyThemes.purple,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: ' Show more',
+                            trimExpandedText: ' Show less',
+                            style: TextStyle(
+                                fontSize: 13,
+                                overflow: TextOverflow.ellipsis,
+                                color: MyThemes.txtdarkwhite),
+                          )
+                        : SizedBox()
+                  ],
+                ),
               ),
             ),
-          ),
-          Stack(
-            children: [
-              widget.imagelink!.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: CachedNetworkImage(
-                        imageUrl: "${widget.imagelink}",
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        height: 120,
+            Stack(
+              children: [
+                widget.imagelink!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: CachedNetworkImage(
+                          imageUrl: "${widget.imagelink}",
+                          placeholder: (context, url) =>
+                              Center(
+                                child: CircularProgressIndicator(
+                                  color: MyThemes.purple,
+                                )),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          height: 120,
+                          width: 110,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : SizedBox(
+                        height: 50,
                         width: 110,
-                        fit: BoxFit.cover,
                       ),
-                    )
-                  : SizedBox(
-                      height: 50,
-                      width: 110,
-                    ),
-              Positioned(
-                bottom: -5.0,
-                right: 0.0,
-                left: 0.0,
-                child: Container(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(0.0)),
-                        onPressed: widget.onTapOnAddCart,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            widget.addedOrNot
-                                ? Icon(CupertinoIcons.minus)
-                                : Icon(CupertinoIcons.add),
-                            widget.addedOrNot
-                                ? Text(
-                                    "REMOVE",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  )
-                                : Text("ADD",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center)
-                          ],
+                Positioned(
+                  bottom: -5.0,
+                  right: 0.0,
+                  left: 0.0,
+                  child: Container(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(0.0)),
+                          onPressed: widget.onTapOnAddCart,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              widget.addedOrNot
+                                  ? Icon(CupertinoIcons.minus)
+                                  : Icon(CupertinoIcons.add),
+                              widget.addedOrNot
+                                  ? Text(
+                                      "REMOVE",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    )
+                                  : Text("ADD",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center)
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          )
-        ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

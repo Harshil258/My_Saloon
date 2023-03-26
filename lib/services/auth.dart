@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../LoginPage.dart';
+import '../Screens/Login_Screen.dart';
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
@@ -103,7 +103,7 @@ class Authentication {
       await googleSignIn.signOut();
       await FirebaseAuth.instance.signOut();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context, MaterialPageRoute(builder: (context) => Login_Screen()));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         Authentication.customSnackBar(

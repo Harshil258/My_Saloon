@@ -10,18 +10,18 @@ import '../models/servicemodel.dart';
 import '../services/detailPageController.dart';
 import '../themes.dart';
 
-class detail_page extends StatefulWidget {
-  const detail_page({Key? key, required this.salonid, required this.salonmodel})
+class Detail_Screen extends StatefulWidget {
+  const Detail_Screen({Key? key, required this.salonid, required this.salonmodel})
       : super(key: key);
 
   final String salonid;
   final SalonModel salonmodel;
 
   @override
-  State<detail_page> createState() => _detail_pageState();
+  State<Detail_Screen> createState() => _Detail_ScreenState();
 }
 
-class _detail_pageState extends State<detail_page> {
+class _Detail_ScreenState extends State<Detail_Screen> {
   late List<ServiceModel>? servicelist = null;
   late final Future<List<ServiceModel>> future;
 
@@ -46,13 +46,15 @@ class _detail_pageState extends State<detail_page> {
   @override
   void initState() {
     super.initState();
-    _loadservices();
+    // _loadservices();
     detailPageController.loadservicesFromfirebase(widget.salonid);
   }
 
   @override
   Widget build(BuildContext context) {
+
     Widget sliverlist;
+
 
     return SafeArea(
       child: Scaffold(
@@ -107,8 +109,11 @@ class _detail_pageState extends State<detail_page> {
                       ), //SliverChildBuildDelegate
                     );
                   } else {
-                    sliverlist =
-                        SliverToBoxAdapter(child: Center(child: CircularProgressIndicator(color: MyThemes.txtwhite,)));
+                    sliverlist = SliverToBoxAdapter(
+                        child: Center(
+                            child: CircularProgressIndicator(
+                      color: MyThemes.txtwhite,
+                    )));
                   }
                   return CustomScrollView(
                     slivers: [
@@ -408,7 +413,9 @@ class _detail_pageState extends State<detail_page> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SlotBookingPage(widget.salonmodel.salonName,widget.salonid)));
+                                  builder: (context) => SlotBookingPage(
+                                      widget.salonmodel.salonName,
+                                      widget.salonid)));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),

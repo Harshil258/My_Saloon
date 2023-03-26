@@ -14,7 +14,7 @@ SalonModel fromQuerySnapshot(snapshot) {
   return SalonModel(
       location: snapshot.data()['location'],
       salonName: snapshot.data()['salon_name'],
-      image: snapshot.data()['image'],
+      image: snapshot.data()['saloonimage'],
       address: snapshot.data()['address'],
       salonId: snapshot.data()['salon_id'],
       category: snapshot.data()['category']);
@@ -41,7 +41,7 @@ class SalonModel {
       salonId: json["salon_id"],
       location: json["location"],
       salonName: json["salon_name"],
-      image: json["image"],
+      image: json["saloonimage"],
       address: json["address"],
       category: json["category"]);
 
@@ -49,7 +49,7 @@ class SalonModel {
         "salon_id": salonId,
         "location": location,
         "salon_name": salonName,
-        "image": image,
+        "saloonimage": image,
         "address": address,
         "category": category
       };

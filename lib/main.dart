@@ -3,14 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_saloon/Register.dart';
-import 'package:my_saloon/profile.dart';
+import 'package:my_saloon/Screens/Register_Screen.dart';
+import 'package:my_saloon/Screens/Profile_Screen.dart';
 import 'package:my_saloon/services/initclass.dart';
 import 'package:my_saloon/signup_process.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/util/routes.dart';
 
-import 'MyHomePage.dart';
+import 'Screens/MyHomePage.dart';
 import 'Upload_photo.dart';
 import 'Upload_photo_preview.dart';
 
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
     if (user != null) {
       first = MyHomePage();
     } else {
-      first =  Register();
+      first =  Register_Screen();
     }
 
     return GetMaterialApp(
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         "/": (context) => first,
         Routes.homedetail: (context) => MyHomePage(),
-        Routes.register: (context) => Register(),
+        Routes.register: (context) => Register_Screen(),
         Routes.Uploadphoto: (context) => Upload_Photo(),
       },
     );

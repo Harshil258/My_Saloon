@@ -12,7 +12,7 @@ import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 
 import '../themes.dart';
-import 'MyHomePage.dart';
+import 'Screens/MyHomePage.dart';
 import 'Upload_photo.dart';
 
 class Upload_Photo_preview extends StatefulWidget {
@@ -114,8 +114,10 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                               : Center(
                                   child: CachedNetworkImage(
                                     imageUrl: "${widget.link}",
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator(
+                                      color: MyThemes.purple,
+                                    )),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
                                     height: 250,
@@ -155,18 +157,20 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                             if (detailPagecontroller.isusermodelinitilize) {
                               print(
                                   "asedgsdgsd part is if  ${detailPagecontroller.modelforintent!.uid}");
-                              if(!widget.link!.trim().isEmpty){
+                              if (!widget.link!.trim().isEmpty) {
                                 setuser = await detailPagecontroller.loadUser(
                                     detailPagecontroller.modelforintent!.uid,
                                     detailPagecontroller.modelforintent!.name,
-                                    detailPagecontroller.modelforintent!.surname,
+                                    detailPagecontroller
+                                        .modelforintent!.surname,
                                     detailPagecontroller.modelforintent!.email,
                                     detailPagecontroller
                                         .modelforintent!.mobilenumber,
-                                    detailPagecontroller.modelforintent!.address,
+                                    detailPagecontroller
+                                        .modelforintent!.address,
                                     detailPagecontroller
                                         .modelforintent!.photo) as String;
-                              }else{
+                              } else {
                                 detailPagecontroller.modelforintent!.photo =
                                     await detailPagecontroller.uploadImage(
                                         widget.image!,
@@ -176,16 +180,18 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                                 setuser = await detailPagecontroller.loadUser(
                                     detailPagecontroller.modelforintent!.uid,
                                     detailPagecontroller.modelforintent!.name,
-                                    detailPagecontroller.modelforintent!.surname,
+                                    detailPagecontroller
+                                        .modelforintent!.surname,
                                     detailPagecontroller.modelforintent!.email,
                                     detailPagecontroller
                                         .modelforintent!.mobilenumber,
-                                    detailPagecontroller.modelforintent!.address,
+                                    detailPagecontroller
+                                        .modelforintent!.address,
                                     detailPagecontroller
                                         .modelforintent!.photo) as String;
                               }
-
                             } else {
+
                               User id =
                                   await Authentication.getUserId() as User;
                               print("asedgsdgsd part is else  ${id}");

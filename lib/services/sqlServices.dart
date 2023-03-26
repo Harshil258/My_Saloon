@@ -1,4 +1,3 @@
-import 'package:my_saloon/models/SalonBooking.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -45,7 +44,7 @@ class sqlServices {
           'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0}")');
       await _db.transaction((txn) async {
         var query =
-            'INSERT INTO CART (documentid , service_id, uid,userName ,placeId ,serviceName ,) '
+            'INSERT INTO CART (documentid , service_id, addedToCart) '
             'VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0})';
         await txn.rawInsert(query);
         print("record inserted successfully ");
@@ -56,24 +55,7 @@ class sqlServices {
     }
   }
 
-  Future addInBookings(
-      String salonid, String serviceid, SalonBooking bookingdetails) async {
-    try {
-      Database _db = await openDb();
-      // print(
-      //     'sdgsfdgsgsgsgsdgsgsdg  INSERT INTO CART (documentid , service_id, addedToCart) VALUES("${salonid}","${serviceid}",${addedToCart ? 1 : 0}")');
-      await _db.transaction((txn) async {
-        var query =
-            'INSERT INTO BOOKINGS (documentid,service_id,uid,userName,placeId,serviceName,serviceDuration,servicePrice,bookingStart,bookingEnd,email,phoneNumber,placeAddress) '
-            'VALUES("${salonid}","${serviceid}","${bookingdetails.uid}","${bookingdetails.userName}","${bookingdetails.placeId}","${bookingdetails.serviceName}","${bookingdetails.serviceDuration}","${bookingdetails.servicePrice}","${bookingdetails.bookingStart}","${bookingdetails.bookingEnd}","${bookingdetails.email}","${bookingdetails.phoneNumber}","${bookingdetails.placeAddress}")';
-        await txn.rawInsert(query);
-        print("record inserted in addInBookings successfully ");
-      });
-      print("sdgsdgsdgsdgdgdg11111111111");
-    } catch (e) {
-      print("sdgsdgsdgsdgdgdg  ${e}");
-    }
-  }
+
 
   Future getPerticularList(String salonid) async {
     try {
@@ -92,7 +74,7 @@ class sqlServices {
       Database _db = await openDb();
       // print("select  database ${_db.toString()}");
       var list = await _db.rawQuery('SELECT * FROM CART', []);
-      // print("getcartlist ${list.toString()}");
+      print("getcartlist ${list.toString()}");
       return list;
     } catch (e) {
       return Future.error(e);
@@ -119,8 +101,10 @@ class sqlServices {
 
   Future deleteTables() async {
     Database _db = await openDb();
-    var query = "DROP TABLE IF EXISTS CART;";
+    // _db.delete("CART");
+    var query = "DELETE FROM CART";
     _db.execute(query);
+    getCartList();
   }
 
   Future removeFromCart(String serviceid) async {
