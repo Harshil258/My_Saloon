@@ -6,13 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_saloon/Screens/Register_Screen.dart';
 import 'package:my_saloon/Screens/Profile_Screen.dart';
 import 'package:my_saloon/services/initclass.dart';
-import 'package:my_saloon/signup_process.dart';
+import 'package:my_saloon/Screens/Signup_Process_Screen.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/util/routes.dart';
 
 import 'Screens/MyHomePage.dart';
-import 'Upload_photo.dart';
-import 'Upload_photo_preview.dart';
+import 'Screens/Upload_photo.dart';
+import 'Screens/Upload_photo_preview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

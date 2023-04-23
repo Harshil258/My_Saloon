@@ -6,22 +6,22 @@ import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 import 'package:intl/intl.dart';
 
-import 'models/SalonBooking.dart';
-import 'services/detailPageController.dart';
+import '../models/SalonBooking.dart';
+import '../services/detailPageController.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 
-class SlotBookingPage extends StatefulWidget {
-  const SlotBookingPage(this.salonName, this.salonid, {Key? key})
+class Slot_Booking_Screen extends StatefulWidget {
+  const Slot_Booking_Screen(this.salonName, this.salonid, {Key? key})
       : super(key: key);
   final String salonName;
   final String salonid;
 
   @override
-  State<SlotBookingPage> createState() => _SlotBookingPageState();
+  State<Slot_Booking_Screen> createState() => _Slot_Booking_ScreenState();
 }
 
-class _SlotBookingPageState extends State<SlotBookingPage> {
+class _Slot_Booking_ScreenState extends State<Slot_Booking_Screen> {
   var detailPagecontroller = Get.find<DetailPageController>();
   CollectionReference bookings =
       FirebaseFirestore.instance.collection('salons');
@@ -147,6 +147,7 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
         .then((value) => print("Booking Added ${value.get().toString()}"))
         .catchError((error) => print("Failed to add booking: $error"));
     Get.back();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Appointment has Booked Successfully...")));
     setState(() {});
   }
 
@@ -297,6 +298,11 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
               ),
             ),
           ),
+          /**
+          PENDING
+              CANCELED
+              DONE
+          * */
           SizedBox(
             height: 600,
             child: BookingCalendar(
@@ -313,6 +319,7 @@ class _SlotBookingPageState extends State<SlotBookingPage> {
                 userEmail: detailPagecontroller.modelforintent!.email,
                 userPhoneNumber:
                     detailPagecontroller.modelforintent!.mobilenumber,
+                status: "PENDING",
                 servicePrice: int.parse(
                   detailPagecontroller.cartservicetotal.toString(),
                 ),

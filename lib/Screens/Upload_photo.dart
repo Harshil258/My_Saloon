@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../themes.dart';
+import '../../themes.dart';
 import 'Upload_photo_preview.dart';
 
 class Upload_Photo extends StatelessWidget {
@@ -30,7 +30,7 @@ class Upload_Photo extends StatelessWidget {
                           "assets/backpurple.svg",
                         ),
                       ),
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
                       },
                     ),
@@ -81,9 +81,13 @@ class Upload_Photo extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(22, 10, 22, 10),
                       child: InkWell(
                         onTap: () async {
-                          await Permission.photos.request();
-                          var permissionStatus = await Permission.photos.status;
-                          if (permissionStatus.isGranted) {
+                          Map<Permission, PermissionStatus> statuses = await [
+                            Permission.storage,
+                          ].request();
+                          print(
+                              "permissionStatus :: ${statuses[Permission.storage]}");
+                          if (statuses[Permission.storage] ==
+                              PermissionStatus.granted) {
                             final _imagePicker = ImagePicker();
                             final PickedFile? image = await _imagePicker
                                 .getImage(source: ImageSource.gallery);
@@ -96,6 +100,12 @@ class Upload_Photo extends StatelessWidget {
                                           Upload_Photo_preview(
                                               image, file, "")));
                             }
+                          } else {
+                            Map<Permission, PermissionStatus> statuses = await [
+                              Permission.storage,
+                            ].request();
+                            print(
+                                "permissionStatus :: ${statuses[Permission.storage]}");
                           }
                         },
                         child: Card(
@@ -117,12 +127,13 @@ class Upload_Photo extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
                       child: InkWell(
                         onTap: () async {
-                          /*   final _imagePicker = ImagePicker();
-                          PickedFile? image;
-                          image = await _imagePicker.getImage(source: ImageSource.gallery);*/
-                          await Permission.photos.request();
-                          var permissionStatus = await Permission.photos.status;
-                          if (permissionStatus.isGranted) {
+                          Map<Permission, PermissionStatus> statuses = await [
+                            Permission.storage,
+                          ].request();
+                          print(
+                              "permissionStatus :: ${statuses[Permission.storage]}");
+                          if (statuses[Permission.storage] ==
+                              PermissionStatus.granted) {
                             final _imagePicker = ImagePicker();
                             final PickedFile? image = await _imagePicker
                                 .getImage(source: ImageSource.camera);
@@ -135,6 +146,12 @@ class Upload_Photo extends StatelessWidget {
                                           Upload_Photo_preview(
                                               image, file, "")));
                             }
+                          } else {
+                            Map<Permission, PermissionStatus> statuses = await [
+                              Permission.storage,
+                            ].request();
+                            print(
+                                "permissionStatus :: ${statuses[Permission.storage]}");
                           }
                         },
                         child: Card(

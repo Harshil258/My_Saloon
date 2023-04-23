@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:booking_calendar/booking_calendar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:my_saloon/Screens/Signup_Process_Screen.dart';
 import 'package:my_saloon/models/servicemodel.dart';
 import 'package:my_saloon/services/auth.dart';
 import 'package:my_saloon/services/detailPageController.dart';
-import 'package:my_saloon/signup_process.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:readmore/readmore.dart';
-
-import '../models/salonmodel.dart';
 
 class Profile_Screen extends StatefulWidget {
   const Profile_Screen({Key? key}) : super(key: key);
@@ -34,6 +30,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
     // fetchConfirmedBookings(detailPagecontroller.modelforintent!.uid);
     fetchConfirmedBookings(detailPagecontroller.modelforintent!.uid)
         .then((value) {
+      value.sort((a, b) => b.bookingStart.compareTo(a.bookingStart));
       listOfBookingServices = value;
       setState(() {});
     });
@@ -164,7 +161,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                Signup_process()));
+                                                Signup_Process_Screen()));
                                   },
                                 )
                               ],
@@ -237,6 +234,7 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                 listOfBookingServices[
                                                         listOfBookingServicesindex]
                                                     .servicesId),
+                                            initialData: [],
                                             builder: (context, snapshot) {
                                               print(
                                                   "sgfdggfdgfg ::  ${snapshot.data!.toSet().toString()}");
@@ -367,6 +365,91 @@ class _Profile_ScreenState extends State<Profile_Screen> {
                                                                           color:
                                                                               MyThemes.txtdarkwhite,
                                                                         ),
+                                                                  (indexofperticulerservice ==
+                                                                          snapshot.data!.length -
+                                                                              1)
+                                                                      ? (listOfBookingServices[listOfBookingServicesindex].bookingStart.isAfter(DateTime.now()) &&
+                                                                              "${listOfBookingServices[listOfBookingServicesindex].status}" == "PENDING")
+                                                                          ? Container(
+                                                                              color: MyThemes.darkblack,
+                                                                              child: InkWell(
+                                                                                onTap: () {
+                                                                                  showDialog(
+                                                                                    context: context,
+                                                                                    builder: (BuildContext context) {
+                                                                                      return AlertDialog(
+                                                                                        title: Text('Cancellation Warning', style: TextStyle(color: MyThemes.darkblack, fontSize: 17, fontWeight: FontWeight.bold)),
+                                                                                        content: Column(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          children: [
+                                                                                            Text('Bookings can only be cancelled prior to 24 hours before the actual appointment time.', style: TextStyle(color: MyThemes.darkblack, fontWeight: FontWeight.w100)),
+                                                                                            (listOfBookingServices[listOfBookingServicesindex].bookingStart.difference(DateTime.now()).inHours > 24) ? Container() : Text('You cannot delete the appointment because it is less than 24 hours away from now.', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w100))
+                                                                                          ],
+                                                                                        ),
+                                                                                        actions: <Widget>[
+                                                                                          (listOfBookingServices[listOfBookingServicesindex].bookingStart.difference(DateTime.now()).inHours > 24)
+                                                                                              ? TextButton(
+                                                                                                  child: Text('Cancel Booking'),
+                                                                                                  onPressed: () async {
+                                                                                                    for (var element in listOfBookingServices[listOfBookingServicesindex].servicesId!) {
+                                                                                                      detailPagecontroller.removeRecord(element);
+                                                                                                    }
+                                                                                                    final querySnapshot = await FirebaseFirestore.instance.collection('salons').doc(snapshot.data![0].salonId).collection("bookings").where("userId", isEqualTo: listOfBookingServices[listOfBookingServicesindex].userId).get();
+                                                                                                    if (querySnapshot.size > 0) {
+                                                                                                      final documentSnapshot = querySnapshot.docs.first;
+                                                                                                      await documentSnapshot.reference.delete();
+                                                                                                    }
+                                                                                                    fetchConfirmedBookings(detailPagecontroller.modelforintent!.uid).then((value) {
+                                                                                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Appointment has Cancelled Successfully...")));
+                                                                                                      setState(() {
+                                                                                                        listOfBookingServices = value;
+                                                                                                      });
+                                                                                                      Navigator.of(context, rootNavigator: true).pop();
+                                                                                                    });
+                                                                                                  },
+                                                                                                )
+                                                                                              : SizedBox(),
+                                                                                          TextButton(
+                                                                                            child: Text('Dismiss'),
+                                                                                            onPressed: () {
+                                                                                              Navigator.of(context).pop();
+                                                                                            },
+                                                                                          ),
+                                                                                        ],
+                                                                                      );
+                                                                                    },
+                                                                                  );
+                                                                                },
+                                                                                child: Container(
+                                                                                  height: 50,
+                                                                                  color: MyThemes.purple,
+                                                                                  child: const Center(child: Text("Cancel Appointment ?")),
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : Container()
+                                                                      : Container(),
+                                                                  Container(
+                                                                    color: MyThemes
+                                                                        .darkblack,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          50,
+                                                                      color: MyThemes
+                                                                          .purple,
+                                                                      child: Center(
+                                                                          child: ("${listOfBookingServices[listOfBookingServicesindex].status}" == "PENDING" && listOfBookingServices[listOfBookingServicesindex].bookingStart.isAfter(DateTime.now()))
+                                                                              ? "${listOfBookingServices[listOfBookingServicesindex].status}" == "PENDING"
+                                                                                  ? Text("DATE IS YET TO COME")
+                                                                                  : ("${listOfBookingServices[listOfBookingServicesindex].status}" == "DONE")
+                                                                                      ? Text("APPOINTMENT IS FINISHED")
+                                                                                      : Text("CANCELED BY SALOON")
+                                                                              : ("${listOfBookingServices[listOfBookingServicesindex].status}" == "DONE")
+                                                                                  ? Text("APPOINTMENT IS FINISHED")
+                                                                                  : Text("CANCELED BY SALOON")),
+                                                                    ),
+                                                                  )
                                                                 ],
                                                               ),
                                                             ));

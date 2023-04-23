@@ -11,8 +11,8 @@ import 'package:my_saloon/services/auth.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 
-import '../themes.dart';
-import 'Screens/MyHomePage.dart';
+import '../../themes.dart';
+import 'MyHomePage.dart';
 import 'Upload_photo.dart';
 
 class Upload_Photo_preview extends StatefulWidget {
@@ -28,6 +28,20 @@ class Upload_Photo_preview extends StatefulWidget {
 }
 
 class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
+  late User id;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Authentication.getUserId().then((value) {
+      id = value!;
+      setState(() {
+
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var detailPagecontroller = Get.find<DetailPageController>();
@@ -163,7 +177,7 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                                     detailPagecontroller.modelforintent!.name,
                                     detailPagecontroller
                                         .modelforintent!.surname,
-                                    detailPagecontroller.modelforintent!.email,
+                                    id.email.toString(),
                                     detailPagecontroller
                                         .modelforintent!.mobilenumber,
                                     detailPagecontroller
@@ -182,7 +196,7 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                                     detailPagecontroller.modelforintent!.name,
                                     detailPagecontroller
                                         .modelforintent!.surname,
-                                    detailPagecontroller.modelforintent!.email,
+                                    id.email.toString(),
                                     detailPagecontroller
                                         .modelforintent!.mobilenumber,
                                     detailPagecontroller
@@ -191,9 +205,6 @@ class _Upload_Photo_previewState extends State<Upload_Photo_preview> {
                                         .modelforintent!.photo) as String;
                               }
                             } else {
-
-                              User id =
-                                  await Authentication.getUserId() as User;
                               print("asedgsdgsd part is else  ${id}");
 
                               detailPagecontroller.modelforintent!.email =

@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:my_saloon/services/auth.dart';
 import 'package:my_saloon/services/detailPageController.dart';
-import 'package:my_saloon/signup_process.dart';
+import 'package:my_saloon/Screens/Signup_Process_Screen.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/util/routes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
@@ -51,6 +51,16 @@ class _Register_ScreenState extends State<Register_Screen> {
                       "Welcome to My Saloon",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
+                  child: Center(
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal, fontSize: 20),
                     ),
                   ),
                 ),
@@ -115,21 +125,13 @@ class _Register_ScreenState extends State<Register_Screen> {
                                                           .modelforintent!
                                                           .uid !=
                                                       "") {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const MyHomePage()));
+                                                    Get.offAll(MyHomePage());
                                                   } else {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const Signup_process()));
+                                                    Get.offAll(
+                                                        Signup_Process_Screen());
                                                   }
                                                 },
                                               );
-
                                               setState(() {
                                                 changebutton = false;
                                               });

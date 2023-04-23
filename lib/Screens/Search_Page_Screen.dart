@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/themes.dart';
 
-import 'category_list.dart';
-import 'models/salonmodel.dart';
+import '../category_list.dart';
+import '../models/salonmodel.dart';
 
-class search_page extends StatefulWidget {
-  const search_page({Key? key}) : super(key: key);
+class Search_Page_Screen extends StatefulWidget {
+  const Search_Page_Screen({Key? key}) : super(key: key);
 
   @override
-  State<search_page> createState() => _search_pageState();
+  State<Search_Page_Screen> createState() => _Search_Page_ScreenState();
 }
 
-class _search_pageState extends State<search_page> {
+class _Search_Page_ScreenState extends State<Search_Page_Screen> {
   var detailPagecontroller = Get.find<DetailPageController>();
 
   // late final List<SalonModel> futuremini =

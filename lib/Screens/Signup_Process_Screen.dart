@@ -6,19 +6,19 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 
-import '../themes.dart';
+import '../../themes.dart';
 import 'Upload_photo.dart';
 import 'Upload_photo_preview.dart';
-import 'models/userData.dart';
+import '../models/userData.dart';
 
-class Signup_process extends StatefulWidget {
-  const Signup_process({Key? key}) : super(key: key);
+class Signup_Process_Screen extends StatefulWidget {
+  const Signup_Process_Screen({Key? key}) : super(key: key);
 
   @override
-  State<Signup_process> createState() => _Signup_processState();
+  State<Signup_Process_Screen> createState() => _Signup_Process_ScreenState();
 }
 
-class _Signup_processState extends State<Signup_process> {
+class _Signup_Process_ScreenState extends State<Signup_Process_Screen> {
   @override
   Widget build(BuildContext context) {
     TextEditingController firstname = new TextEditingController();

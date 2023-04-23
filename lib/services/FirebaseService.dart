@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,8 +15,6 @@ import 'auth.dart';
 import 'detailPageController.dart';
 
 class FirebaseService {
-
-
   Future<List<ServiceModel>> loadservicesFromfirebase(String salonid) async {
     final CollectionReference collection =
         FirebaseFirestore.instance.collection('service');
@@ -32,42 +31,42 @@ class FirebaseService {
         FirebaseFirestore.instance.collection('Users');
     DocumentSnapshot<Object?> model = await collection.doc(user!.uid).get();
     print("Current user : ${user!.uid}");
+    print("Current user : ${user.providerData[0].email}");
     print("Current user : ${model.data().toString()}");
-    if(model.data().isNull){
+    if (model.data().isNull) {
       return Usermodel(
           uid: "",
           name: "",
           surname: "",
-          email: "",
+          email: user.providerData[0].email.toString(),
           mobilenumber: "",
           address: "",
           photo: "");
-    }else{
+    } else {
       return Usermodel(
           uid: model.get("uid"),
           name: model.get("Name"),
           surname: model.get("Surname"),
-          email: model.get("email"),
+          email: user.providerData[0].email.toString(),
           mobilenumber: model.get("mobilenumber"),
           address: model.get("address"),
           photo: model.get("photo"));
     }
-
   }
 
   Future<String?> storeData(String userid, String name, String surname,
-      String email, String phoneno, String address,String photo) async {
+      String email, String phoneno, String address, String photo) async {
     try {
       final CollectionReference collection =
           FirebaseFirestore.instance.collection('Users');
       collection.doc(userid).set({
-        "uid":userid,
+        "uid": userid,
         "Name": name,
         "Surname": surname,
         "email": email,
         "mobilenumber": phoneno,
         "address": address,
-        "photo" : photo
+        "photo": photo
       });
       return 'success';
     } on Exception catch (e) {
@@ -81,12 +80,11 @@ class FirebaseService {
     QuerySnapshot snapshot =
         await collection.where('gender', isEqualTo: gender).get();
 
-
     return await List.from(
         snapshot.docs.map((element) => fromQuerySnapshotService(element)));
   }
 
-  Future<String?> uploadImage(PickedFile file,String name) async {
+  Future<String?> uploadImage(PickedFile file, String name) async {
     final _firebaseStorage = FirebaseStorage.instance;
     try {
       print("sadgsdgdg   ${file.path}");
@@ -97,6 +95,14 @@ class FirebaseService {
             .putFile(File(file.path));
         var downloadUrl = await snapshot.ref.getDownloadURL();
         print("sadgsdgdg   ${downloadUrl}");
+        Fluttertoast.showToast(
+            msg: "Image Uploaded SuccessFully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM ,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
         return downloadUrl;
       } else {
         print('No Image Path Received');

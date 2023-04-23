@@ -10,12 +10,13 @@ import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:my_saloon/models/salonmodel.dart';
 import 'package:my_saloon/Screens/Profile_Screen.dart';
-import 'package:my_saloon/search_page.dart';
+import 'package:my_saloon/Screens/Search_Page_Screen.dart';
 import 'package:my_saloon/services/detailPageController.dart';
 import 'package:my_saloon/themes.dart';
 import 'package:my_saloon/widgets/common_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../services/NotificationHelper.dart';
 import 'Caegory_Detail_Screen.dart';
 import '../category_list.dart';
 
@@ -95,6 +96,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     future = detailPagecontroller.callfirebase();
     first = getUserLocation();
+
+    print("scheduledNotification  ::   ${DateTime.now().hour}:${DateTime.now().minute + 1}");
+    NotificationHelper helper = NotificationHelper();
+   helper.initializeNotification();
+   helper.scheduledNotification(
+        hour: DateTime.now().hour,
+        minutes: DateTime.now().minute + 1,
+        id: 123,
+        sound: "sound.mp3");
   }
 
   List<String> categoryname = ["Male", "Female", "All"];
@@ -120,11 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       CachedNetworkImage(
                           imageUrl: "${item}",
-                          placeholder: (context, url) =>
-                              Center(
+                          placeholder: (context, url) => Center(
                                   child: CircularProgressIndicator(
-                                    color: MyThemes.purple,
-                                  )),
+                                color: MyThemes.purple,
+                              )),
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                           fit: BoxFit.cover,
@@ -409,7 +418,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                search_page()));
+                                                Search_Page_Screen()));
                                   },
                                   child: Row(
                                     children: [
